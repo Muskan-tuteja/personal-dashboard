@@ -144,7 +144,7 @@ const Dashboard = () => {
                 {/* Weather */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className={`backdrop-blur-lg p-5 rounded-2xl shadow-lg border-t-4 ${
+                  className={`backdrop-blur-lg p-5 rounded-2xl shadow-lg border-t-4  ${
                     darkMode
                       ? "bg-gray-800/70 border-blue-500"
                       : "bg-white/70 border-blue-400"

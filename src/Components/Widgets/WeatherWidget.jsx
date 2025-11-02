@@ -28,7 +28,7 @@ export const WeatherWidget = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-100 via-white to-blue-50 rounded-2xl shadow-lg p-5 w-full text-gray-800 backdrop-blur-md border border-blue-200 transition-all hover:shadow-xl hover:scale-[1.02] duration-300">
+    <div className="bg-gradient-to-br from-blue-100 via-white to-blue-50 rounded-2xl shadow-lg p-5 w-full  text-gray-800 backdrop-blur-md border border-blue-200 transition-all hover:shadow-xl hover:scale-[1.02] duration-300 ">
       <h2 className="text-lg font-semibold mb-3 flex items-center justify-center gap-2 text-blue-700">
         🌤️ Weather Forecast
       </h2>
