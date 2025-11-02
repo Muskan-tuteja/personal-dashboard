@@ -20,8 +20,15 @@ import NewsWidget from "./Widgets/NewsWidget";
 import StockWidget from "./Widgets/StockWidget";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = useState(
+    localStorage.getItem("activeTab") || "dashboard"
+  );
+
+  // ✅ Whenever activeTab changes, save it in localStorage
+  React.useEffect(() => {
+    localStorage.setItem("activeTab", activeTab);
+  }, [activeTab]);
 
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -61,7 +68,7 @@ const Dashboard = () => {
         >
           <FaUserCircle className="text-6xl mb-2 drop-shadow-lg" />
           <h2 className="text-lg font-semibold tracking-wide">
-            Hi, Muskan 👋
+            Hi
           </h2>
           <p
             className={`text-xs ${
@@ -180,11 +187,11 @@ const Dashboard = () => {
                 {/* Calendar */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className={`backdrop-blur-lg p-4 rounded-2xl shadow-lg border-t-4 ${
-                    darkMode
-                      ? "bg-gray-800/70 border-green-400"
-                      : "bg-white/70 border-green-400 h-100"
-                  }`}
+                 className={`p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 w-full h-full flex flex-col ${
+  darkMode
+    ? "bg-gray-800/60 border border-gray-700 text-gray-100"
+    : "bg-white/70 backdrop-blur-xl border border-gray-200 text-gray-800"
+}`}
                 >
                   <CalendarWidget />
                 </motion.div>
@@ -194,7 +201,7 @@ const Dashboard = () => {
 <motion.div
   whileHover={{ scale: 1.02 }}
   transition={{ type: "spring", stiffness: 250, damping: 18 }}
-  className={`relative backdrop-blur-2xl rounded-3xl shadow-2xl border-t-4 transition-all duration-500 col-span-2 xl:col-span-2 p-6 overflow-hidden h-100
+  className={`relative backdrop-blur-2xl rounded-3xl shadow-2xl border-t-4 transition-all duration-500 col-span-2 xl:col-span-2 p-6 overflow-hidden h-120
     ${
       darkMode
         ? "bg-gray-900/70 border-purple-500 hover:shadow-purple-400/20"
@@ -223,16 +230,7 @@ const Dashboard = () => {
 
 
                 {/* Stocks */}
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className={`backdrop-blur-lg p-4 rounded-2xl shadow-lg border-t-4 ${
-                    darkMode
-                      ? "bg-gray-800/70 border-pink-400"
-                      : "bg-white/70 border-pink-400"
-                  }`}
-                >
-                  <StockWidget />
-                </motion.div>
+                
               </div>
             </motion.div>
           )}

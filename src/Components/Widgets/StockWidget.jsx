@@ -8,8 +8,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { motion } from "framer-motion";
 
-const API_KEY = "VB7I4XQO2E1FELFU"; // 🔑 Replace with your own key
+const API_KEY = "8YLH7XRZV0PP5ZD3"; // 👉 तुम अपनी free key डाल सकती हो https://financialmodelingprep.com/developer से
 
 const StockWidget = () => {
   const [symbol, setSymbol] = useState("AAPL");
@@ -25,26 +26,26 @@ const StockWidget = () => {
 
     try {
       const res = await axios.get(
-        `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${API_KEY}`
+        `https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?serietype=line&apikey=${API_KEY}`
       );
 
-      const timeSeries = res.data["Time Series (5min)"];
-      if (!timeSeries) throw new Error("Invalid symbol or API limit reached");
+      if (!res.data.historical)
+        throw new Error("Invalid stock symbol or API error.");
 
-      const chartData = Object.entries(timeSeries)
-        .map(([time, value]) => ({
-          time,
-          price: parseFloat(value["1. open"]),
+      const chartData = res.data.historical
+        .map((d) => ({
+          time: d.date,
+          price: d.close,
         }))
         .reverse();
 
       setData(chartData);
       setInfo({
         name: symbol.toUpperCase(),
-        lastPrice: chartData.at(-1)?.price,
+        lastPrice: chartData.length > 0 ? chartData.at(-1).price : "N/A",
       });
     } catch (err) {
-      setError("⚠️ Failed to load stock data. Please try again later.");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -55,60 +56,88 @@ const StockWidget = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <h1 className="text-4xl font-extrabold text-center mb-8 text-indigo-700 tracking-wide">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50 p-6 flex flex-col items-center">
+      {/* Header */}
+      <motion.h1
+        className="text-4xl md:text-5xl font-extrabold text-indigo-700 mb-10 text-center tracking-wide drop-shadow-sm"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         📊 Smart Stock Dashboard
-      </h1>
+      </motion.h1>
 
-      {/* Search Bar */}
-      <div className="flex justify-center mb-8">
+      {/* Search Section */}
+      <motion.div
+        className="flex flex-col sm:flex-row justify-center items-center mb-10 gap-3"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
         <input
           type="text"
           value={symbol}
           onChange={(e) => setSymbol(e.target.value.toUpperCase())}
           placeholder="Enter stock symbol (e.g. AAPL, TCS)"
-          className="border border-gray-300 rounded-l-xl p-3 w-72 focus:ring-2 focus:ring-indigo-400 outline-none text-gray-700"
+          className="border-2 border-indigo-300 rounded-xl p-3 w-72 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-gray-700 shadow-sm transition-all duration-300"
         />
         <button
           onClick={fetchStock}
-          className="bg-indigo-600 text-white px-6 rounded-r-xl hover:bg-indigo-700 transition-all"
+          className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 shadow-md hover:shadow-xl transition-all duration-300"
         >
           Search
         </button>
-      </div>
+      </motion.div>
 
-      {/* Loading & Error States */}
+      {/* Status Messages */}
       {loading && (
-        <p className="text-center text-gray-600 font-medium">Loading...</p>
+        <motion.p
+          className="text-indigo-600 font-medium text-lg mt-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          🔄 Fetching latest data...
+        </motion.p>
       )}
       {error && (
-        <p className="text-center text-red-500 font-semibold">{error}</p>
+        <motion.p
+          className="text-red-500 font-semibold mt-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          {error}
+        </motion.p>
       )}
 
       {/* Stock Info Card */}
       {info && (
-        <div className="bg-white shadow-lg border border-gray-200 rounded-2xl p-6 max-w-2xl mx-auto text-center transition-all hover:shadow-2xl">
-          <h2 className="text-2xl font-bold mb-2 text-gray-800">
-            {info.name} Stock
-          </h2>
-          <p className="text-lg text-gray-600 mb-4">
-            💰 Last Price:{" "}
-            <span className="font-semibold text-indigo-600">
-              {info.lastPrice}
-            </span>
-          </p>
+        <motion.div
+          className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-3xl border border-indigo-100 hover:shadow-indigo-200 transition-all duration-500"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-3xl font-bold text-gray-800 tracking-tight">
+              {info.name} <span className="text-indigo-600">Stock</span>
+            </h2>
+            <div className="bg-indigo-50 px-4 py-2 rounded-xl text-indigo-700 font-semibold">
+              💰 {info.lastPrice}
+            </div>
+          </div>
 
           {/* Chart */}
-          {data.length > 0 && (
-            <ResponsiveContainer width="100%" height={300}>
+          {data.length > 0 ? (
+            <ResponsiveContainer width="100%" height={320}>
               <LineChart data={data}>
                 <XAxis dataKey="time" hide />
                 <YAxis domain={["auto", "auto"]} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#f3f4f6",
-                    borderRadius: "8px",
-                    border: "1px solid #ccc",
+                    backgroundColor: "#f9fafb",
+                    borderRadius: "10px",
+                    border: "1px solid #ddd",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                   }}
                 />
                 <Line
@@ -120,8 +149,12 @@ const StockWidget = () => {
                 />
               </LineChart>
             </ResponsiveContainer>
+          ) : (
+            <p className="text-center text-gray-500 mt-4">
+              No data available. Try another symbol.
+            </p>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );

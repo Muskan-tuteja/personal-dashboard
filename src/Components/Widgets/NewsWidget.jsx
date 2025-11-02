@@ -7,17 +7,21 @@ const NewsWidget = ({ darkMode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_KEY = "8ff84c8f2b1991a2fca1e5b44829586e";
+  const API_KEY = "pub_bf6ce8a8e7dc47189edd2ad511508b08";
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const res = await axios.get(
-          `https://gnews.io/api/v4/search?q=India&lang=en&max=9&apikey=${API_KEY}`
+          `https://newsdata.io/api/1/latest?apikey=${API_KEY}&country=in&language=en&category=top`
         );
-        setArticles(res.data.articles);
+
+        console.log("API Response:", res.data);
+        const data = Array.isArray(res.data.results) ? res.data.results : [];
+        setArticles(data);
         setLoading(false);
       } catch (err) {
+        console.error("Fetch Error:", err);
         setError("Failed to fetch news 😢");
         setLoading(false);
       }
@@ -28,7 +32,7 @@ const NewsWidget = ({ darkMode }) => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-64 text-lg font-semibold text-purple-500 animate-pulse">
+      <div className="flex justify-center items-center h-100 text-lg font-semibold text-purple-500 animate-pulse">
         ⏳ Fetching latest headlines...
       </div>
     );
@@ -45,15 +49,15 @@ const NewsWidget = ({ darkMode }) => {
       <h1
         className={`text-2xl font-extrabold text-center mb-2 bg-clip-text text-transparent h-10 ${
           darkMode
-            ? "bg-to-r from-pink-400 to-purple-400"
-            : "bg-gradient-to-r  from-purple-600 to-pink-500"
+            ? "bg-gradient-to-r from-pink-400 to-purple-400"
+            : "bg-gradient-to-r from-purple-600 to-pink-500"
         }`}
       >
         Trending News
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.slice(0, 9).map((article, index) => (
+        {(articles || []).slice(0, 9).map((article, index) => (
           <motion.div
             key={index}
             whileHover={{ scale: 1.03, y: -5 }}
@@ -63,9 +67,9 @@ const NewsWidget = ({ darkMode }) => {
                 : "bg-white/70 border-gray-200 hover:shadow-purple-300/40"
             }`}
           >
-            {article.image && (
+            {article.image_url && (
               <img
-                src={article.image}
+                src={article.image_url}
                 alt="news"
                 className="w-full h-40 object-cover"
               />
@@ -86,7 +90,7 @@ const NewsWidget = ({ darkMode }) => {
                 {article.description || "No description available."}
               </p>
               <a
-                href={article.url}
+                href={article.link}
                 target="_blank"
                 rel="noreferrer"
                 className={`text-sm font-semibold transition-colors ${
