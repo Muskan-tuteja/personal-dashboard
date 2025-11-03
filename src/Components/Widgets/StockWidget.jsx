@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { motion } from "framer-motion";
 
-const API_KEY = "8YLH7XRZV0PP5ZD3"; // 👉 तुम अपनी free key डाल सकती हो https://financialmodelingprep.com/developer से
+const API_KEY = "VB7I4XQO2E1FELFU"; // तुम्हारी key
 
 const StockWidget = () => {
   const [symbol, setSymbol] = useState("AAPL");
@@ -26,23 +26,26 @@ const StockWidget = () => {
 
     try {
       const res = await axios.get(
-        `https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?serietype=line&apikey=${API_KEY}`
+        `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${API_KEY}`
       );
 
-      if (!res.data.historical)
-        throw new Error("Invalid stock symbol or API error.");
+      const series = res.data["Time Series (Daily)"];
 
-      const chartData = res.data.historical
-        .map((d) => ({
-          time: d.date,
-          price: d.close,
-        }))
-        .reverse();
+      if (!series) {
+        throw new Error("Invalid stock symbol or API limit reached.");
+      }
+
+      const chartData = Object.entries(series).map(([date, values]) => ({
+        time: date,
+        price: parseFloat(values["4. close"]),
+      }));
+
+      chartData.reverse();
 
       setData(chartData);
       setInfo({
         name: symbol.toUpperCase(),
-        lastPrice: chartData.length > 0 ? chartData.at(-1).price : "N/A",
+        lastPrice: chartData.at(-1)?.price || "N/A",
       });
     } catch (err) {
       setError(err.message);
@@ -57,7 +60,6 @@ const StockWidget = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50 p-6 flex flex-col items-center">
-      {/* Header */}
       <motion.h1
         className="text-4xl md:text-5xl font-extrabold text-indigo-700 mb-10 text-center tracking-wide drop-shadow-sm"
         initial={{ opacity: 0, y: -20 }}
@@ -67,7 +69,6 @@ const StockWidget = () => {
         📊 Smart Stock Dashboard
       </motion.h1>
 
-      {/* Search Section */}
       <motion.div
         className="flex flex-col sm:flex-row justify-center items-center mb-10 gap-3"
         initial={{ opacity: 0 }}
@@ -89,7 +90,6 @@ const StockWidget = () => {
         </button>
       </motion.div>
 
-      {/* Status Messages */}
       {loading && (
         <motion.p
           className="text-indigo-600 font-medium text-lg mt-4"
@@ -109,7 +109,6 @@ const StockWidget = () => {
         </motion.p>
       )}
 
-      {/* Stock Info Card */}
       {info && (
         <motion.div
           className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-3xl border border-indigo-100 hover:shadow-indigo-200 transition-all duration-500"
@@ -126,7 +125,6 @@ const StockWidget = () => {
             </div>
           </div>
 
-          {/* Chart */}
           {data.length > 0 ? (
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={data}>
