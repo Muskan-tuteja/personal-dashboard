@@ -41,7 +41,7 @@ const TodoWidget = () => {
   };
 
   return (
-    <div className="min-h-[40vh] flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-[40vh] flex flex-col items-center text-gray-800 justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-lg bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300">
         <div className="flex items-center justify-center gap-2 mb-5">
           <ClipboardList className="text-indigo-600 w-6 h-6" />
@@ -85,7 +85,7 @@ const TodoWidget = () => {
                 <input
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
-                  className="flex-1 mr-2 text-sm bg-white border border-indigo-200 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="flex-1 mr-2 text-sm bg-black border border-indigo-200 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 />
               ) : (
                 <span className="text-gray-700 truncate flex-1">{todo}</span>

@@ -67,9 +67,7 @@ const Dashboard = () => {
           className="flex flex-col items-center mb-8"
         >
           <FaUserCircle className="text-6xl mb-2 drop-shadow-lg" />
-          <h2 className="text-lg font-semibold tracking-wide">
-            Hi
-          </h2>
+          <h2 className="text-lg font-semibold tracking-wide">Hi</h2>
           <p
             className={`text-xs ${
               darkMode ? "text-gray-300" : "text-blue-100"
@@ -166,7 +164,7 @@ const Dashboard = () => {
                   className={`backdrop-blur-lg p-4 rounded-2xl shadow-lg border-t-4 ${
                     darkMode
                       ? "bg-gray-800/70 border-cyan-400"
-                      : "bg-white/70 border-cyan-400"
+                      : "bg-white/70 border-cyan-900"
                   }`}
                 >
                   <TodoWidget />
@@ -187,50 +185,46 @@ const Dashboard = () => {
                 {/* Calendar */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                 className={`p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 w-full h-full flex flex-col ${
-  darkMode
-    ? "bg-gray-800/60 border border-gray-700 text-gray-100"
-    : "bg-white/70 backdrop-blur-xl border border-gray-200 text-gray-800"
-}`}
+                  className={`p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 w-full h-full flex flex-col ${
+                    darkMode
+                      ? "bg-gray-800/60 border border-gray-700 text-gray-100"
+                      : "bg-white/70 backdrop-blur-xl border border-gray-200 text-gray-800"
+                  }`}
                 >
                   <CalendarWidget />
                 </motion.div>
 
                 {/* News */}
                 {/* News */}
-<motion.div
-  whileHover={{ scale: 1.02 }}
-  transition={{ type: "spring", stiffness: 250, damping: 18 }}
-  className={`relative backdrop-blur-2xl rounded-3xl shadow-2xl border-t-4 transition-all duration-500 col-span-2 xl:col-span-2 p-6 overflow-hidden h-120
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 250, damping: 18 }}
+                  className={`relative backdrop-blur-2xl rounded-3xl shadow-2xl border-t-4 transition-all duration-500 col-span-2 xl:col-span-2 p-6 overflow-hidden h-120
     ${
       darkMode
         ? "bg-gray-900/70 border-purple-500 hover:shadow-purple-400/20"
         : "bg-white/70 border-purple-400 hover:shadow-purple-300/40"
     }`}
->
-  <div className="flex justify-between items-center mb-4">
-   
+                >
+                  <div className="flex justify-between items-center mb-4">
+                    <button
+                      onClick={() => setActiveTab("news")}
+                      className={`px-3 py-1 text-sm rounded-lg font-semibold transition-all ${
+                        darkMode
+                          ? "bg-purple-700/40 text-purple-300 hover:bg-purple-600/60"
+                          : "bg-purple-100 text-purple-700 hover:bg-purple-200"
+                      }`}
+                    >
+                      View All
+                    </button>
+                  </div>
 
-    <button
-      onClick={() => setActiveTab("news")}
-      className={`px-3 py-1 text-sm rounded-lg font-semibold transition-all ${
-        darkMode
-          ? "bg-purple-700/40 text-purple-300 hover:bg-purple-600/60"
-          : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-      }`}
-    >
-      View All
-    </button>
-  </div>
-
-  <div className="h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-purple-400/60 scrollbar-track-transparent">
-    <NewsWidget />
-  </div>
-</motion.div>
-
+                  <div className="h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-purple-400/60 scrollbar-track-transparent">
+                    <NewsWidget />
+                  </div>
+                </motion.div>
 
                 {/* Stocks */}
-                
               </div>
             </motion.div>
           )}

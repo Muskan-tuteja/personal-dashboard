@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.calendar-container {
+  transition: all 0.3s ease;
 }
 
 .animate-gradientMove {
@@ -101,3 +99,58 @@
   font-size: 1.2rem;
   color: #777;
 }
+/* ✅ Responsive Layout */
+@media (max-width: 1024px) {
+  /* Tablet View */
+  aside {
+    width: 200px !important;
+    padding: 1rem !important;
+  }
+  main {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile View */
+  .flex.h-screen {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  aside {
+    width: 100% !important;
+    flex-direction: row !important;
+    overflow-x: auto;
+    justify-content: space-around;
+    padding: 0.5rem !important;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  aside nav {
+    display: flex !important;
+    gap: 1rem !important;
+  }
+
+  aside footer,
+  .dark-light-toggle {
+    display: none !important;
+  }
+
+  main {
+    padding: 1rem !important;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (max-width: 768px) {
+  .calendar-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+

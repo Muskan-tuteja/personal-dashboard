@@ -41,7 +41,7 @@ export const WeatherWidget = () => {
   }, []);
 
   return (
-    <div className="min-h-[40vh] flex flex-col items-center justify-center bg-gradient-to-br from-sky-50 via-white to-blue-100 p-6">
+    <div className="min-h-[40vh] flex flex-col items-center text-gray-800 justify-center bg-gradient-to-br from-sky-50 via-white to-blue-100 p-6">
       <div className="w-full max-w-md bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 border border-blue-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
         <h2 className="text-lg font-semibold mb-4 flex items-center justify-center gap-2 text-blue-700">
           <Cloud className="w-5 h-5 animate-pulse" />
